@@ -1,0 +1,84 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "title": "How do employees and teams typically work together?",
+      "options": [
+        "Strong social bond, collective success, and we-over-me",
+        "Highly flexible, experimental, and adaptive",
+        "Competitive, individual accountability, and goal-oriented",
+        "Defined roles, structured teamwork, and siloed collaboration"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Which leadership styles do you think are most effective for driving success and achieving organizational goals?",
+      "options": [
+        "Supportive, mentoring, and people-first",
+        "Visionary, risk-taking, and innovation focused",
+        "Results-oriented, and competitive",
+        "Process-driven, structured, and efficiency-focused"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Which of the following best describes the overall environment of the organization?",
+      "options": [
+        "A close-knit, family-like culture with trust and collaboration",
+        "An innovative, risk-taking environment focused on experimentation",
+        "A results-driven, high-performance workplace with competitive energy",
+        "A structured, process-oriented organization emphasizing stability"
+      ]
+    },
+    {
+      "id": 4,
+      "title": "How comfortable is your organization with trying new ideas?",
+      "options": [
+        "Open to experimenting with new ideas, through collaboration and teamwork",
+        "Highly comfortable with new ideas, prioritizing creativity, risk-taking, and innovative solutions",
+        "Generally comfortable with new ideas that can enhance competitiveness and profitability",
+        "Less comfortable with new ideas, favoring established processes and traditional methods"
+      ]
+    },
+    {
+      "id": 5,
+      "title": "What primarily drives employee engagement and motivation?",
+      "options": [
+        "A sense of belonging, shared values, and mutual support",
+        "Constant new challenges, creativity, and continuous innovation",
+        "Winning in the market, performance-based rewards",
+        "Pride in brand legacy fosters with aspirational leadership and visible authority"
+      ]
+    },
+    {
+      "id": 6,
+      "title": "How does your organization approach confidentiality?",
+      "options": [
+        "Trust-Based – Shared openly within teams. Employees protect information out of mutual respect",
+        "Independent Responsibility – Open discussions with clear boundaries on what stays confidential to balance creativity with security",
+        "Business-Driven – Strict rules to protect business advantage. Breaches have serious consequences",
+        "Highly Regulated – Clear rules and policies in place, with limited access to confidential information"
+      ]
+    },
+    {
+      "id": 7,
+      "title": "What is the type of environment that defines your client experience ?",
+      "options": [
+        "Warm & Social: Inviting, connected, culturally integrated",
+        "Bold & Experimental: Disruptive, exploratory, visionary",
+        "State-of-the-Art Experience: Cutting-edge, experience-led, transparent, innovative",
+        "Capability and legacy driven: Timeless, refined, honoring tradition with modernity"
+      ]
+    },
+    {
+      "id": 8,
+      "title": "What are the different types of social & interpersonal interactions at work?",
+      "options": [
+        "Personal Check-ins: Conversations about life outside of work, fostering genuine connections",
+        "Coffee Break Conversations: Short, relaxed interactions that refresh and connect employees",
+        "Hallway Hellos: Casual, spontaneous chats that build camaraderie",
+        "Milestone celebrations: Team lunches or events to mark achievements"
+      ]
+    }
+  ]
+}

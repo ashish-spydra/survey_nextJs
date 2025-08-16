@@ -1,0 +1,61 @@
+/* Circular Progress Component */
+.circular-progress {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circular-progress-svg {
+  transform: rotate(-90deg);
+  overflow: visible;
+}
+
+.circular-progress-background {
+  transition: stroke 0.3s ease;
+}
+
+.circular-progress-bar {
+  transition: stroke-dashoffset 0.5s ease-in-out;
+  stroke: #8B0000;
+}
+
+.circular-progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.percentage {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #8B0000;
+  line-height: 1;
+}
+
+/* Animation for progress */
+@keyframes progress-animation {
+  0% {
+    stroke-dashoffset: 100%;
+  }
+  100% {
+    stroke-dashoffset: var(--target-offset);
+  }
+}
+
+/* Responsive sizing */
+.circular-progress.small {
+  --size: 40px;
+}
+
+.circular-progress.medium {
+  --size: 60px;
+}
+
+.circular-progress.large {
+  --size: 80px;
+}

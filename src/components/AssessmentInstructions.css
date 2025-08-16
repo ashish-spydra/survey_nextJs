@@ -1,0 +1,140 @@
+/* Assessment Instructions Step Styles */
+.assessment-step-content {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+
+
+/* Instructions Section */
+.instructions-section {
+  padding: 0;
+}
+
+/* Next Button Section */
+.next-button-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+}
+
+.next-button {
+  background: linear-gradient(135deg, #8B0000 0%, #800020 100%);
+  color: white;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.2s ease;
+  box-shadow: 
+    0 4px 6px -1px rgba(139, 0, 0, 0.2),
+    0 2px 4px -1px rgba(139, 0, 0, 0.1);
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 10;
+  pointer-events: all;
+}
+
+.next-button:hover {
+  background: linear-gradient(135deg, #800020 0%, #8B0000 100%);
+  box-shadow: 
+    0 10px 15px -3px rgba(139, 0, 0, 0.3),
+    0 4px 6px -2px rgba(139, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.next-button:active {
+  transform: translateY(0);
+}
+
+.next-arrow {
+  color: white;
+  stroke-width: 2.5;
+}
+
+.instructions-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  text-align: center;
+  margin-bottom: 2rem;
+  text-decoration: underline;
+  text-underline-offset: 8px;
+}
+
+.instructions-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.instructions-list li {
+  color: #111827;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.instructions-list li::before {
+  content: "•";
+  color: #8B0000;
+  font-weight: bold;
+  font-size: 1.5rem;
+  position: absolute;
+  left: 0;
+  top: -2px;
+}
+
+.instructions-list li.indented {
+  padding-left: 3rem;
+  font-size: 1rem;
+  color: #374151;
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .assessment-step-content {
+    padding: 1rem;
+  }
+  
+  .instructions-title {
+    font-size: 1.25rem;
+  }
+  
+  .instructions-list li {
+    font-size: 1rem;
+  }
+}
+
+.next-button.disabled {
+  background: #9CA3AF;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.next-button.disabled:hover {
+  background: #9CA3AF;
+  transform: none;
+  box-shadow: none;
+}
+
+.instruction-timer {
+  color: #6B7280;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  text-align: center;
+  font-style: italic;
+}

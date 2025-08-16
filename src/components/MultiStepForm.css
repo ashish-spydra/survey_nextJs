@@ -1,0 +1,25 @@
+/* Multi-Step Form Container */
+.multistep-form {
+  height: 100vh;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  overflow: hidden;
+}
+
+/* Form Content Area */
+.form-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-top: 100px; /* Space for fixed header */
+  padding-bottom: 120px; /* Space for fixed footer */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .form-content {
+    padding-top: 80px;
+    padding-bottom: 140px;
+  }
+}

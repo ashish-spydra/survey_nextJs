@@ -1,0 +1,235 @@
+/* Question Page Styles */
+.question-page-content {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.question-section {
+  padding: 0;
+}
+
+/* Question Header */
+.question-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.question-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* Question Table */
+.question-table {
+  width: 100%;
+  margin-bottom: .5rem;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 1fr 150px 150px;
+  gap: 1rem;
+  margin-bottom: .5rem;
+  padding: 0 .5rem;
+}
+
+.option-header-cell {
+  /* Empty cell for alignment */
+  min-height: 1px;
+}
+
+.state-header-cell {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: #111827;
+  padding: 0.75rem;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 1fr 150px 150px;
+  gap: 1rem;
+  align-items: center;
+  padding: .5rem;
+  border-bottom: 1px solid #E5E7EB;
+  min-height: 40px;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.option-cell {
+  padding-right: 2rem;
+}
+
+.option-text {
+  font-size: 1rem;
+  color: #374151;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.input-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px; /* Match the column width for perfect alignment */
+}
+
+.points-input {
+  width: 120px; /* Match total input width for consistent alignment */
+  height: 30px;
+  padding: 0.5rem;
+  border: 2px solid #D1D5DB;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.points-input:focus {
+  outline: none;
+  border-color: #8B0000;
+  box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.1);
+}
+
+/* Table Footer */
+.table-footer {
+  display: grid;
+  grid-template-columns: 1fr 150px 150px;
+  gap: 1rem;
+  padding: 1rem;
+  border-top: 2px solid #374151;
+  margin-top: .5rem;
+}
+
+
+
+.total-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px; /* Match the column width */
+}
+
+.total-input {
+  width: 120px; /* Match the points input width more closely */
+  height: 30px;
+  padding: 0.5rem;
+  border: 2px solid #374151;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1rem;
+  background: #F9FAFB;
+  color: #111827;
+  cursor: not-allowed;
+}
+
+/* Next Button Section */
+.next-button-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.next-button {
+  background: linear-gradient(135deg, #8B0000 0%, #800020 100%);
+  color: white;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.2s ease;
+  box-shadow: 
+    0 4px 6px -1px rgba(139, 0, 0, 0.2),
+    0 2px 4px -1px rgba(139, 0, 0, 0.1);
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.next-button:hover:not(.disabled) {
+  background: linear-gradient(135deg, #800020 0%, #8B0000 100%);
+  box-shadow: 
+    0 10px 15px -3px rgba(139, 0, 0, 0.3),
+    0 4px 6px -2px rgba(139, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.next-button:active:not(.disabled) {
+  transform: translateY(0);
+}
+
+.next-button.disabled {
+  background: #9CA3AF;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.next-arrow {
+  color: white;
+  stroke-width: 2.5;
+}
+
+.proceed-warning {
+  font-size: 0.875rem;
+  color: #DC2626;
+  text-align: center;
+  margin: 0;
+  font-weight: 500;
+  max-width: 400px;
+  line-height: 1.4;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .question-page-content {
+    padding: 1rem;
+  }
+  
+  .table-header,
+  .table-row,
+  .table-footer {
+    grid-template-columns: 1fr 100px 100px;
+    gap: 0.5rem;
+  }
+  
+  .input-cell,
+  .total-cell {
+    width: 100px; /* Match mobile column width */
+  }
+  
+  .points-input,
+  .total-input {
+    width: 80px; /* Smaller but still aligned on mobile */
+    font-size: 0.875rem;
+  }
+  
+  .question-title {
+    font-size: 1.25rem;
+  }
+  
+  .option-cell {
+    padding-right: 1rem;
+  }
+  
+  .option-text {
+    font-size: 0.875rem;
+  }
+}

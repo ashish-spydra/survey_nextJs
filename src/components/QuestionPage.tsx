@@ -116,6 +116,26 @@ const QuestionPage: React.FC<QuestionPageProps> = ({
     return "";
   };
 
+  // Check if current state is complete (total = 100 and no equal points)
+  const isCurrentStateComplete = () => {
+    const currentTotal = getTotalPoints('current');
+    const currentHasEqual = hasEqualPoints(points.current);
+    return currentTotal === 100 && !currentHasEqual;
+  };
+
+  // Get tab index for current inputs (1-4)
+  const getCurrentTabIndex = (optionKey: 'A' | 'B' | 'C' | 'D') => {
+    const tabIndexMap = { A: 1, B: 2, C: 3, D: 4 };
+    return tabIndexMap[optionKey];
+  };
+
+  // Get tab index for aspirational inputs (5-8 when current complete, 9-12 when not complete)
+  const getAspirationalTabIndex = (optionKey: 'A' | 'B' | 'C' | 'D') => {
+    const baseTabIndex = isCurrentStateComplete() ? 5 : 9;
+    const tabIndexMap = { A: 0, B: 1, C: 2, D: 3 };
+    return baseTabIndex + tabIndexMap[optionKey];
+  };
+
   // Handle next button click - save response and proceed
   const handleNext = () => {
     if (canProceed() && onSaveResponse) {
@@ -170,6 +190,7 @@ const QuestionPage: React.FC<QuestionPageProps> = ({
                     onChange={(e) => handlePointChange('current', optionKey, parseInt(e.target.value) || 0)}
                     className="points-input"
                     placeholder="0"
+                    tabIndex={getCurrentTabIndex(optionKey)}
                   />
                 </div>
                 <div className="input-cell">
@@ -181,6 +202,7 @@ const QuestionPage: React.FC<QuestionPageProps> = ({
                     onChange={(e) => handlePointChange('aspirational', optionKey, parseInt(e.target.value) || 0)}
                     className="points-input"
                     placeholder="0"
+                    tabIndex={getAspirationalTabIndex(optionKey)}
                   />
                 </div>
               </div>

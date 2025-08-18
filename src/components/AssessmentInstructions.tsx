@@ -34,10 +34,10 @@ const AssessmentInstructions: React.FC<AssessmentInstructionsProps> = ({
               <li>Each question presents four options</li>
               <li>Allocate a total of 100 points across the four options to reflect:</li>
               <li className="indented">
-                Your organisation&apos;s <strong>Current State</strong> (how it is today)
+                Your organisation&apos;s Current State (how it is today)
               </li>
               <li className="indented">
-                Your organisation&apos;s <strong>Aspirational State</strong> (how you want it to be in future)
+                Your organisation&apos;s Aspirational State (how you want it to be in future)
               </li>
               <li>Do not assign equal points to any of the four options</li>
               <li className="final-instruction">Ensure that all 100 points are fully distributed in each section (Current & Aspirational State) before proceeding to the next question</li>

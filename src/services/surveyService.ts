@@ -47,6 +47,8 @@ class SurveyService {
   // Submit survey response
   async submitSurvey(surveyData: SurveySubmissionData): Promise<ApiResponse<unknown>> {
     try {
+      console.log('surveyService: Submitting survey data:', surveyData);
+      
       const response = await fetch(`${this.baseURL}/surveys`, {
         method: 'POST',
         headers: {
@@ -56,11 +58,14 @@ class SurveyService {
       });
 
       const result = await response.json();
+      console.log('surveyService: API response received:', result);
 
       if (!response.ok) {
+        console.error('surveyService: API request failed:', response.status, result);
         throw new Error(result.message || 'Failed to submit survey');
       }
 
+      console.log('surveyService: API request successful, returning result');
       return result;
     } catch (error: unknown) {
       console.error('Survey submission error:', error);

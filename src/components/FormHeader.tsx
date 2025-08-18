@@ -4,7 +4,9 @@ import './FormHeader.css';
 const FormHeader: React.FC = () => {
   return (
     <div className="form-header">
-      <img src="/logo.png" alt="Space Matrix Logo" className="form-header-logo" />
+      <div className="form-header-container">
+        <img src="/logo.png" alt="Space Matrix Logo" className="form-header-logo" />
+      </div>
     </div>
   );
 };

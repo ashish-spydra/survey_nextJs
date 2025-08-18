@@ -141,7 +141,7 @@ const QuestionPage: React.FC<QuestionPageProps> = ({
   return (
     <div className="question-page">
       <div className="question-container">
-        {/* Header with Logo and Title */}
+        {/* Header with Title */}
         <div className="question-header">
           <h1 className="question-title">{questionData.title}</h1>
         </div>

@@ -120,8 +120,12 @@ export const useSurveyData = () => {
         console.log('Survey submitted successfully:', result.data);
         // Store the redirect URL if provided
         if (result.data && typeof result.data === 'object' && 'redirectUrl' in result.data) {
+          console.log('useSurveyData: Found redirect URL in response:', result.data.redirectUrl);
           // Store in localStorage or state for the frontend to use
           localStorage.setItem('surveyRedirectUrl', result.data.redirectUrl as string);
+          console.log('useSurveyData: Stored redirect URL in localStorage');
+        } else {
+          console.log('useSurveyData: No redirect URL found in response data:', result.data);
         }
         return true;
       } else {

@@ -51,6 +51,7 @@ const UserDetailsForm: React.FC<UserDetailsFormProps> = ({
   });
 
   const [errors, setErrors] = useState<Partial<UserFormData>>({});
+  const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
 
   // Load existing user details when component mounts
   useEffect(() => {
@@ -69,18 +70,64 @@ const UserDetailsForm: React.FC<UserDetailsFormProps> = ({
 
   // Auto-redirect when survey is submitted successfully
   useEffect(() => {
+    console.log('UserDetailsForm: submitSuccess changed to:', submitSuccess);
     if (submitSuccess) {
-      const redirectUrl = localStorage.getItem('surveyRedirectUrl');
-      if (redirectUrl) {
+      console.log('UserDetailsForm: Survey submitted successfully, checking for redirect URL...');
+      
+      // Test localStorage access
+      try {
+        localStorage.setItem('test', 'test');
+        localStorage.removeItem('test');
+        console.log('UserDetailsForm: localStorage access test passed');
+      } catch (error) {
+        console.error('UserDetailsForm: localStorage access test failed:', error);
+      }
+      
+      // Try to get redirect URL from state first, then localStorage
+      let finalRedirectUrl = redirectUrl;
+      if (!finalRedirectUrl) {
+        finalRedirectUrl = localStorage.getItem('surveyRedirectUrl');
+      }
+      
+      console.log('UserDetailsForm: Redirect URL from state:', redirectUrl);
+      console.log('UserDetailsForm: Redirect URL from localStorage:', finalRedirectUrl);
+      
+      if (finalRedirectUrl) {
+        console.log('UserDetailsForm: Found redirect URL, setting up redirect timer...');
         // Add a small delay to show the success message before redirecting
         const timer = setTimeout(() => {
-          window.open(redirectUrl, '_blank');
+          console.log('UserDetailsForm: Executing redirect to:', finalRedirectUrl);
+          try {
+            // Try to open in new tab first
+            const newWindow = window.open(finalRedirectUrl, '_blank');
+            if (!newWindow) {
+              console.log('UserDetailsForm: Popup blocked, trying to redirect in same window');
+              // If popup is blocked, redirect in same window
+              window.location.href = finalRedirectUrl;
+            } else {
+              console.log('UserDetailsForm: Redirect executed successfully in new tab');
+            }
+          } catch (error) {
+            console.error('UserDetailsForm: Error during redirect:', error);
+            // Fallback to same window redirect
+            try {
+              window.location.href = finalRedirectUrl;
+              console.log('UserDetailsForm: Fallback redirect executed');
+            } catch (fallbackError) {
+              console.error('UserDetailsForm: Fallback redirect also failed:', fallbackError);
+            }
+          }
         }, 2000); // 2 second delay
         
-        return () => clearTimeout(timer);
+        return () => {
+          console.log('UserDetailsForm: Clearing redirect timer');
+          clearTimeout(timer);
+        };
+      } else {
+        console.log('UserDetailsForm: No redirect URL found in state or localStorage');
       }
     }
-  }, [submitSuccess]);
+  }, [submitSuccess, redirectUrl]);
 
   // Check form validity whenever formData changes
   useEffect(() => {
@@ -173,6 +220,13 @@ const UserDetailsForm: React.FC<UserDetailsFormProps> = ({
         if (!success) {
           // Error handling is done in the hook
           return;
+        }
+        
+        // Check if we have a redirect URL in localStorage and store it in state
+        const storedRedirectUrl = localStorage.getItem('surveyRedirectUrl');
+        if (storedRedirectUrl) {
+          console.log('UserDetailsForm: Storing redirect URL in component state:', storedRedirectUrl);
+          setRedirectUrl(storedRedirectUrl);
         }
       }
 
@@ -367,6 +421,29 @@ const UserDetailsForm: React.FC<UserDetailsFormProps> = ({
                     <div className="spinner"></div>
                     <span>Redirecting...</span>
                   </div>
+                  <button 
+                    className="manual-redirect-button"
+                    onClick={() => {
+                      const url = redirectUrl || localStorage.getItem('surveyRedirectUrl');
+                      if (url) {
+                        console.log('UserDetailsForm: Manual redirect to:', url);
+                        window.open(url, '_blank');
+                      } else {
+                        console.error('UserDetailsForm: No redirect URL available for manual redirect');
+                      }
+                    }}
+                    style={{
+                      marginTop: '1rem',
+                      padding: '0.5rem 1rem',
+                      backgroundColor: '#007bff',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Click here if not redirected automatically
+                  </button>
                 </div>
               </div>
             )}

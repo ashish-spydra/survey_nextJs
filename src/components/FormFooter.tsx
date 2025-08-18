@@ -1,5 +1,6 @@
 
-import {  ChevronUp, ChevronDown } from 'lucide-react';
+import React from 'react';
+import { ChevronUp, ChevronDown } from 'lucide-react';
 import CircularProgress from './CircularProgress';
 import './FormFooter.css';
 
@@ -16,13 +17,12 @@ interface FormFooterProps {
 const FormFooter: React.FC<FormFooterProps> = ({
   onNext,
   onPrevious,
-          canGoNext,
-          canGoPrevious,
+  canGoNext,
+  canGoPrevious,
   progressPercentage,
-
+  currentStep,
+  totalSteps
 }) => {
-
-
   return (
     <div className="form-footer">
       {/* Progress Section */}
@@ -38,11 +38,8 @@ const FormFooter: React.FC<FormFooterProps> = ({
         </div>
       </div>
 
-  
+      {/* Navigation Section */}
       <div className="footer-navigation-section">
-
-       
-
         {/* Scroll Arrows */}
         <div className="scroll-arrows">
           <button className="scroll-button" onClick={onPrevious} disabled={!canGoPrevious}>

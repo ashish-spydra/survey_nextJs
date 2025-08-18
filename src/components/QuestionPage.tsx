@@ -90,8 +90,10 @@ const QuestionPage: React.FC<QuestionPageProps> = ({
   // Notify parent about validation status whenever points change
   useEffect(() => {
     const isValid = canProceed();
-    onValidationChange?.(isValid);
-  }, [points]); // Remove onValidationChange from dependencies to prevent infinite re-renders
+    if (onValidationChange) {
+      onValidationChange(isValid);
+    }
+  }, [points]); // Remove onValidationChange from dependencies to prevent infinite loop
 
   const getValidationMessage = () => {
     const currentTotal = getTotalPoints('current');
@@ -137,12 +139,14 @@ const QuestionPage: React.FC<QuestionPageProps> = ({
   const questionData = typedQuestionsData.questions.find(q => q.id === questionNumber) || typedQuestionsData.questions[0];
 
   return (
-    <div className="question-page-content">
-      <div className="question-section">
+    <div className="question-page">
+      <div className="question-container">
+        {/* Header with Logo and Title */}
         <div className="question-header">
           <h1 className="question-title">{questionData.title}</h1>
         </div>
 
+        {/* Question Table */}
         <div className="question-table">
           <div className="table-header">
             <div className="option-header-cell"></div>
@@ -162,9 +166,10 @@ const QuestionPage: React.FC<QuestionPageProps> = ({
                     type="number"
                     min="0"
                     max="100"
-                    value={points.current[optionKey]}
+                    value={points.current[optionKey] || ''}
                     onChange={(e) => handlePointChange('current', optionKey, parseInt(e.target.value) || 0)}
                     className="points-input"
+                    placeholder="0"
                   />
                 </div>
                 <div className="input-cell">
@@ -172,35 +177,46 @@ const QuestionPage: React.FC<QuestionPageProps> = ({
                     type="number"
                     min="0"
                     max="100"
-                    value={points.aspirational[optionKey]}
+                    value={points.aspirational[optionKey] || ''}
                     onChange={(e) => handlePointChange('aspirational', optionKey, parseInt(e.target.value) || 0)}
                     className="points-input"
+                    placeholder="0"
                   />
                 </div>
               </div>
             );
           })}
 
+          {/* Totals Row */}
           <div className="table-footer">
             <div className="footer-cell"></div>
             <div className="total-cell">
+              <div className="total-label">Total</div>
               <input
                 type="number"
-                value={getTotalPoints('current')}
+                value={getTotalPoints('current') || ''}
                 readOnly
                 className="total-input"
               />
             </div>
             <div className="total-cell">
+              <div className="total-label">Total</div>
               <input
                 type="number"
-                value={getTotalPoints('aspirational')}
+                value={getTotalPoints('aspirational') || ''}
                 readOnly
                 className="total-input"
               />
             </div>
           </div>
         </div>
+
+        {/* Validation Message */}
+        {!canProceed() && (
+          <div className="validation-message">
+            <p className="validation-text">{getValidationMessage()}</p>
+          </div>
+        )}
 
         {/* Next Button */}
         <div className="next-button-section">
@@ -212,11 +228,6 @@ const QuestionPage: React.FC<QuestionPageProps> = ({
             <span>NEXT</span>
             <ArrowRight className="next-arrow" size={20} />
           </button>
-          {!canProceed() && (
-            <p className="proceed-warning">
-              {getValidationMessage()}
-            </p>
-          )}
         </div>
       </div>
     </div>

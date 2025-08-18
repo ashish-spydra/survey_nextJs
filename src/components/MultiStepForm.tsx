@@ -23,13 +23,6 @@ const MultiStepForm: React.FC = () => {
     0: true // Assessment instructions are always valid
   });
 
-  const handleStepValidation = useCallback((stepIndex: number, isValid: boolean) => {
-    setStepValidation(prev => ({
-      ...prev,
-      [stepIndex]: isValid
-    }));
-  }, []); // Empty dependency array since this function doesn't depend on any props or state
-
   const {
     surveyData,
     saveQuestionResponse,
@@ -42,6 +35,13 @@ const MultiStepForm: React.FC = () => {
     submitSuccess
   } = useSurveyData();
 
+  // Create stable validation handlers
+  const createValidationHandler = useCallback((stepIndex: number) => {
+    return (isValid: boolean) => {
+      setStepValidation(prev => ({ ...prev, [stepIndex]: isValid }));
+    };
+  }, []);
+
   // Dynamically create steps based on questions data
   const typedQuestionsData = questionsData as QuestionsData;
   const steps: FormStep[] = useMemo(() => [
@@ -51,7 +51,9 @@ const MultiStepForm: React.FC = () => {
       component: (props: Record<string, unknown>) => (
         <AssessmentInstructions 
           {...props}
-          onValidationChange={(isValid: boolean) => handleStepValidation(0, isValid)}
+          onNext={props.onNext as () => void}
+          canGoNext={props.canGoNext as boolean}
+          onValidationChange={createValidationHandler(0)}
         />
       ),
       isCompleted: completedSteps.has(0)
@@ -65,7 +67,7 @@ const MultiStepForm: React.FC = () => {
           questionNumber={question.id}
           onSaveResponse={saveQuestionResponse}
           existingResponse={getQuestionResponse(question.id)}
-          onValidationChange={(isValid: boolean) => handleStepValidation(index + 1, isValid)}
+          onValidationChange={createValidationHandler(index + 1)}
         />
       ),
       isCompleted: completedSteps.has(index + 1)
@@ -82,7 +84,7 @@ const MultiStepForm: React.FC = () => {
           isSubmitting={isSubmitting}
           submitError={submitError}
           submitSuccess={submitSuccess}
-          onValidationChange={(isValid: boolean) => handleStepValidation(typedQuestionsData.questions.length + 1, isValid)}
+          onValidationChange={createValidationHandler(typedQuestionsData.questions.length + 1)}
         />
       ),
       isCompleted: completedSteps.has(typedQuestionsData.questions.length + 1)
@@ -98,12 +100,12 @@ const MultiStepForm: React.FC = () => {
     submitError,
     submitSuccess,
     typedQuestionsData.questions,
-    handleStepValidation
+    createValidationHandler
   ]);
 
   const currentStep = steps[currentStepIndex];
-  const totalSteps = steps.length;
-  const progress = getSurveyProgress(typedQuestionsData.questions.length);
+  const totalSteps = typedQuestionsData.questions.length + 2; // +2 for instructions and user details
+  const progress = getSurveyProgress(typedQuestionsData.questions.length, currentStepIndex);
   const progressPercentage = progress.progressPercentage;
 
   const handleNext = useCallback(() => {
@@ -113,11 +115,11 @@ const MultiStepForm: React.FC = () => {
       setCompletedSteps(prev => new Set([...prev, currentStepIndex]));
       
       // Move to next step if available
-      if (currentStepIndex < steps.length - 1) {
+      if (currentStepIndex < typedQuestionsData.questions.length + 1) {
         setCurrentStepIndex(currentStepIndex + 1);
       }
     }
-  }, [currentStepIndex, stepValidation, steps.length]);
+  }, [currentStepIndex, stepValidation, typedQuestionsData.questions.length]);
 
   const handlePrevious = useCallback(() => {
     if (currentStepIndex > 0) {
@@ -125,7 +127,7 @@ const MultiStepForm: React.FC = () => {
     }
   }, [currentStepIndex]);
 
-  const canGoNext = currentStepIndex < steps.length - 1 && stepValidation[currentStepIndex];
+  const canGoNext = currentStepIndex < (typedQuestionsData.questions.length + 1) && stepValidation[currentStepIndex];
   const canGoPrevious = currentStepIndex > 0;
 
   const CurrentStepComponent = currentStep.component;

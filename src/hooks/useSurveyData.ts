@@ -149,17 +149,21 @@ export const useSurveyData = () => {
   }, []);
 
   // Get survey progress
-  const getSurveyProgress = useCallback((totalQuestions: number) => {
+  const getSurveyProgress = useCallback((totalQuestions: number, currentStepIndex: number = 0) => {
     const completedQuestions = surveyData.questionResponses.length;
     const hasUserDetails = surveyData.userDetails !== null;
+    
+    // Calculate progress based on current step
+    const totalSteps = totalQuestions + 2; // +2 for instructions and user details
+    const currentProgress = Math.round(((currentStepIndex + 1) / totalSteps) * 100);
     
     return {
       completedQuestions,
       totalQuestions,
       hasUserDetails,
-      progressPercentage: Math.round(
-        ((completedQuestions + (hasUserDetails ? 1 : 0)) / (totalQuestions + 1)) * 100
-      )
+      currentStepIndex,
+      totalSteps,
+      progressPercentage: currentProgress
     };
   }, [surveyData]);
 

@@ -68,20 +68,11 @@ const UserDetailsForm: React.FC<UserDetailsFormProps> = ({
     }
   }, [existingUserDetails]);
 
-  // Auto-redirect when survey is submitted successfully
+  // Auto-redirect when survey is submitted successfully (fallback only)
   useEffect(() => {
-    console.log('UserDetailsForm: submitSuccess changed to:', submitSuccess);
+    console.log('UserDetailsForm: useEffect triggered - submitSuccess:', submitSuccess, 'redirectUrl:', redirectUrl);
     if (submitSuccess) {
-      console.log('UserDetailsForm: Survey submitted successfully, checking for redirect URL...');
-      
-      // Test localStorage access
-      try {
-        localStorage.setItem('test', 'test');
-        localStorage.removeItem('test');
-        console.log('UserDetailsForm: localStorage access test passed');
-      } catch (error) {
-        console.error('UserDetailsForm: localStorage access test failed:', error);
-      }
+      console.log('UserDetailsForm: useEffect fallback redirect triggered (this should not happen if immediate redirect worked)');
       
       // Try to get redirect URL from state first, then localStorage
       let finalRedirectUrl = redirectUrl;
@@ -89,57 +80,22 @@ const UserDetailsForm: React.FC<UserDetailsFormProps> = ({
         finalRedirectUrl = localStorage.getItem('surveyRedirectUrl');
       }
       
-      console.log('UserDetailsForm: Redirect URL from state:', redirectUrl);
-      console.log('UserDetailsForm: Redirect URL from localStorage:', finalRedirectUrl);
+      console.log('UserDetailsForm: useEffect - Redirect URL from state:', redirectUrl);
+      console.log('UserDetailsForm: useEffect - Redirect URL from localStorage:', finalRedirectUrl);
       
       if (finalRedirectUrl) {
-        console.log('UserDetailsForm: Found redirect URL, setting up redirect timer...');
-        // Add a small delay to show the success message before redirecting
-        const timer = setTimeout(() => {
-          console.log('UserDetailsForm: Executing redirect to:', finalRedirectUrl);
-          try {
-            // Try to open in new tab first
-            const newWindow = window.open(finalRedirectUrl, '_blank');
-            if (!newWindow) {
-              console.log('UserDetailsForm: Popup blocked, trying to redirect in same window');
-              // If popup is blocked, redirect in same window
-              window.location.href = finalRedirectUrl;
-            } else {
-              console.log('UserDetailsForm: Redirect executed successfully in new tab');
-              // Reload the current page after successful redirect
-              setTimeout(() => {
-                console.log('UserDetailsForm: Reloading current page...');
-                window.location.reload();
-              }, 1000); // 1 second delay after redirect
-            }
-          } catch (error) {
-            console.error('UserDetailsForm: Error during redirect:', error);
-            // Fallback to same window redirect
-            try {
-              window.location.href = finalRedirectUrl;
-              console.log('UserDetailsForm: Fallback redirect executed');
-            } catch (fallbackError) {
-              console.error('UserDetailsForm: Fallback redirect also failed:', fallbackError);
-            }
-          }
-        }, 2000); // 2 second delay
-        
-        return () => {
-          console.log('UserDetailsForm: Clearing redirect timer');
-          clearTimeout(timer);
-        };
+        console.log('UserDetailsForm: useEffect - Executing fallback redirect to:', finalRedirectUrl);
+        console.log('UserDetailsForm: useEffect - Current location before redirect:', window.location.href);
+        try {
+          // Navigate to the redirect URL in the same tab immediately
+          window.location.href = finalRedirectUrl;
+          console.log('UserDetailsForm: useEffect - Fallback redirect executed');
+        } catch (error) {
+          console.error('UserDetailsForm: useEffect - Error during fallback redirect:', error);
+        }
       } else {
-        console.log('UserDetailsForm: No redirect URL found in state or localStorage');
-        // If no redirect URL, just reload the current page
-        const timer = setTimeout(() => {
-          console.log('UserDetailsForm: No redirect URL, reloading current page...');
-          window.location.reload();
-        }, 2000); // 2 second delay
-        
-        return () => {
-          console.log('UserDetailsForm: Clearing reload timer');
-          clearTimeout(timer);
-        };
+        console.log('UserDetailsForm: useEffect - No redirect URL found, reloading page...');
+        window.location.reload();
       }
     }
   }, [submitSuccess, redirectUrl]);
@@ -230,17 +186,64 @@ const UserDetailsForm: React.FC<UserDetailsFormProps> = ({
 
       // Submit the entire survey with user details
       if (onSubmitSurvey) {
+        console.log('UserDetailsForm: Starting survey submission...');
+        const startTime = Date.now();
+        
         // Pass user details directly to avoid timing issues
         const success = await onSubmitSurvey(userDetails);
+        const endTime = Date.now();
+        console.log(`UserDetailsForm: Survey submission completed in ${endTime - startTime}ms, success: ${success}`);
+        
         if (!success) {
           // Error handling is done in the hook
           return;
         }
         
-        // Check if we have a redirect URL in localStorage and store it in state
+        // Check if we have a redirect URL in localStorage and redirect immediately
         const storedRedirectUrl = localStorage.getItem('surveyRedirectUrl');
+        console.log('UserDetailsForm: Checking for redirect URL after submission:', storedRedirectUrl);
+        
         if (storedRedirectUrl) {
-          console.log('UserDetailsForm: Storing redirect URL in component state:', storedRedirectUrl);
+          console.log('UserDetailsForm: Found redirect URL, redirecting immediately without waiting for state update...');
+          console.log('UserDetailsForm: Redirect URL value:', storedRedirectUrl);
+          console.log('UserDetailsForm: Current window.location:', window.location.href);
+          
+          // Redirect immediately without waiting for React state updates
+          try {
+            console.log('UserDetailsForm: Attempting window.location.href redirect...');
+            window.location.href = storedRedirectUrl;
+            console.log('UserDetailsForm: window.location.href set, checking if navigation started...');
+            
+            // Add a small delay to check if navigation actually started
+            setTimeout(() => {
+              console.log('UserDetailsForm: 100ms after redirect attempt, current location:', window.location.href);
+              if (window.location.href === storedRedirectUrl) {
+                console.log('UserDetailsForm: Navigation successful!');
+              } else {
+                console.log('UserDetailsForm: Navigation may not have started, trying alternative method...');
+                try {
+                  window.location.assign(storedRedirectUrl);
+                  console.log('UserDetailsForm: Used window.location.assign as fallback');
+                } catch (assignError) {
+                  console.error('UserDetailsForm: window.location.assign also failed:', assignError);
+                  try {
+                    window.location.replace(storedRedirectUrl);
+                    console.log('UserDetailsForm: Used window.location.replace as final fallback');
+                  } catch (replaceError) {
+                    console.error('UserDetailsForm: All redirect methods failed:', replaceError);
+                  }
+                }
+              }
+            }, 100);
+            
+            return; // Exit early since we're redirecting
+          } catch (error) {
+            console.error('UserDetailsForm: Immediate redirect failed:', error);
+            // Fallback to state-based redirect
+            setRedirectUrl(storedRedirectUrl);
+          }
+        } else {
+          console.log('UserDetailsForm: No redirect URL found, storing in state for later use');
           setRedirectUrl(storedRedirectUrl);
         }
       }
@@ -436,38 +439,6 @@ const UserDetailsForm: React.FC<UserDetailsFormProps> = ({
                     <div className="spinner"></div>
                     <span>Redirecting...</span>
                   </div>
-                  <button 
-                    className="manual-redirect-button"
-                    onClick={() => {
-                      const url = redirectUrl || localStorage.getItem('surveyRedirectUrl');
-                      if (url) {
-                        console.log('UserDetailsForm: Manual redirect to:', url);
-                        const newWindow = window.open(url, '_blank');
-                        if (newWindow) {
-                          // Reload the current page after successful redirect
-                          setTimeout(() => {
-                            console.log('UserDetailsForm: Manual redirect - reloading current page...');
-                            window.location.reload();
-                          }, 1000);
-                        }
-                      } else {
-                        console.error('UserDetailsForm: No redirect URL available for manual redirect');
-                        // If no redirect URL, just reload the current page
-                        window.location.reload();
-                      }
-                    }}
-                    style={{
-                      marginTop: '1rem',
-                      padding: '0.5rem 1rem',
-                      backgroundColor: '#007bff',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Click here if not redirected automatically
-                  </button>
                 </div>
               </div>
             )}

@@ -35,6 +35,15 @@ const QuestionPage: React.FC<QuestionPageProps> = ({
     aspirational: { A: 0, B: 0, C: 0, D: 0 }
   });
 
+  // Track which fields have been touched by the user
+  const [touchedFields, setTouchedFields] = useState<{
+    current: { A: boolean; B: boolean; C: boolean; D: boolean };
+    aspirational: { A: boolean; B: boolean; C: boolean; D: boolean };
+  }>({
+    current: { A: false, B: false, C: false, D: false },
+    aspirational: { A: false, B: false, C: false, D: false }
+  });
+
   // Load existing response data when component mounts
   useEffect(() => {
     if (existingResponse) {
@@ -42,19 +51,36 @@ const QuestionPage: React.FC<QuestionPageProps> = ({
         current: existingResponse.currentState,
         aspirational: existingResponse.aspirationalState
       });
+      
+      // Mark all fields as touched when loading existing response
+      setTouchedFields({
+        current: { A: true, B: true, C: true, D: true },
+        aspirational: { A: true, B: true, C: true, D: true }
+      });
     }
   }, [existingResponse]);
 
   const handlePointChange = (
     type: 'current' | 'aspirational',
     option: 'A' | 'B' | 'C' | 'D',
-    value: number
+    value: string
   ) => {
+    const numValue = value === "" ? 0 : Math.max(0, Math.min(100, Number(value)));
+    
+    // Mark field as touched
+    setTouchedFields(prev => ({
+      ...prev,
+      [type]: {
+        ...prev[type],
+        [option]: true
+      }
+    }));
+    
     setPoints(prev => ({
       ...prev,
       [type]: {
         ...prev[type],
-        [option]: Math.max(0, Math.min(100, value))
+        [option]: numValue
       }
     }));
   };
@@ -186,8 +212,8 @@ const QuestionPage: React.FC<QuestionPageProps> = ({
                     type="number"
                     min="0"
                     max="100"
-                    value={points.current[optionKey] || ''}
-                    onChange={(e) => handlePointChange('current', optionKey, parseInt(e.target.value) || 0)}
+                                         value={points.current[optionKey] === 0 && touchedFields.current[optionKey] ? 0 : points.current[optionKey] || ''}
+                                         onChange={(e) => handlePointChange('current', optionKey, e.target.value)}
                     className="points-input"
                     placeholder="0"
                     tabIndex={getCurrentTabIndex(optionKey)}
@@ -198,8 +224,8 @@ const QuestionPage: React.FC<QuestionPageProps> = ({
                     type="number"
                     min="0"
                     max="100"
-                    value={points.aspirational[optionKey] || ''}
-                    onChange={(e) => handlePointChange('aspirational', optionKey, parseInt(e.target.value) || 0)}
+                                         value={points.aspirational[optionKey] === 0 && touchedFields.aspirational[optionKey] ? 0 : points.aspirational[optionKey] || ''}
+                                         onChange={(e) => handlePointChange('aspirational', optionKey, e.target.value)}
                     className="points-input"
                     placeholder="0"
                     tabIndex={getAspirationalTabIndex(optionKey)}
@@ -216,7 +242,7 @@ const QuestionPage: React.FC<QuestionPageProps> = ({
               <div className="total-label">Total</div>
               <input
                 type="number"
-                value={getTotalPoints('current') || ''}
+                                 value={getTotalPoints('current') || ''}
                 readOnly
                 className="total-input"
               />
@@ -225,7 +251,7 @@ const QuestionPage: React.FC<QuestionPageProps> = ({
               <div className="total-label">Total</div>
               <input
                 type="number"
-                value={getTotalPoints('aspirational') || ''}
+                                 value={getTotalPoints('aspirational') || ''}
                 readOnly
                 className="total-input"
               />

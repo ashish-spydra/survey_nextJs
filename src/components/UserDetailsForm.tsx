@@ -106,6 +106,11 @@ const UserDetailsForm: React.FC<UserDetailsFormProps> = ({
               window.location.href = finalRedirectUrl;
             } else {
               console.log('UserDetailsForm: Redirect executed successfully in new tab');
+              // Reload the current page after successful redirect
+              setTimeout(() => {
+                console.log('UserDetailsForm: Reloading current page...');
+                window.location.reload();
+              }, 1000); // 1 second delay after redirect
             }
           } catch (error) {
             console.error('UserDetailsForm: Error during redirect:', error);
@@ -125,6 +130,16 @@ const UserDetailsForm: React.FC<UserDetailsFormProps> = ({
         };
       } else {
         console.log('UserDetailsForm: No redirect URL found in state or localStorage');
+        // If no redirect URL, just reload the current page
+        const timer = setTimeout(() => {
+          console.log('UserDetailsForm: No redirect URL, reloading current page...');
+          window.location.reload();
+        }, 2000); // 2 second delay
+        
+        return () => {
+          console.log('UserDetailsForm: Clearing reload timer');
+          clearTimeout(timer);
+        };
       }
     }
   }, [submitSuccess, redirectUrl]);
@@ -427,9 +442,18 @@ const UserDetailsForm: React.FC<UserDetailsFormProps> = ({
                       const url = redirectUrl || localStorage.getItem('surveyRedirectUrl');
                       if (url) {
                         console.log('UserDetailsForm: Manual redirect to:', url);
-                        window.open(url, '_blank');
+                        const newWindow = window.open(url, '_blank');
+                        if (newWindow) {
+                          // Reload the current page after successful redirect
+                          setTimeout(() => {
+                            console.log('UserDetailsForm: Manual redirect - reloading current page...');
+                            window.location.reload();
+                          }, 1000);
+                        }
                       } else {
                         console.error('UserDetailsForm: No redirect URL available for manual redirect');
+                        // If no redirect URL, just reload the current page
+                        window.location.reload();
                       }
                     }}
                     style={{
